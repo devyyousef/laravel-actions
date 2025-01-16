@@ -17,9 +17,6 @@ class ResendVerifyEmailAction
         $this->validate($request);
         $user = User::where('email', $request->email)->first();
         if ($user) {
-            $newCode = rand(100000, 999999);
-            $user->verification_code = $newCode;
-            $user->save();
             Event::dispatch(ResendVerifyEmailEvent::class, $user);
         }
         return new BaseResponseResource(__('Verification email sent successfully'), 200);

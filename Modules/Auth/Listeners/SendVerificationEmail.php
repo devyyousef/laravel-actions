@@ -14,6 +14,6 @@ class SendVerificationEmail
 {
     public function handle(User $user): void
     {
-        Mail::to($user->email)->send(new VerifyEmail($user));
+        $user->sendEmailVerificationNotification();
     }
 }
