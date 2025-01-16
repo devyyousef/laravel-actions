@@ -3,6 +3,8 @@
 namespace Modules\Auth\Providers;
 
 use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Modules\Users\Models\User;

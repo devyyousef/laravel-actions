@@ -2,8 +2,12 @@
 
 namespace Modules\Auth\Providers;
 
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Modules\Auth\Events\RegisterEvent;
+use Modules\Auth\Events\ResendVerifyEmailEvent;
+use Modules\Auth\Listeners\SendVerificationEmail;
 use Modules\Auth\Listeners\SendWelcomeEmail;
 
 class EventServiceProvider extends ServiceProvider
@@ -16,6 +20,10 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         RegisterEvent::class => [
             SendWelcomeEmail::class,
+            SendVerificationEmail::class,
+        ],
+        ResendVerifyEmailEvent::class => [
+            SendVerificationEmail::class,
         ],
     ];
 

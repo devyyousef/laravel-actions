@@ -1,10 +1,13 @@
 <?php
 
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Route;
 use Modules\Auth\Actions\ForgetPasswordAction;
 use Modules\Auth\Actions\LoginAction;
 use Modules\Auth\Actions\RegisterAction;
+use Modules\Auth\Actions\ResendVerifyEmailAction;
 use Modules\Auth\Actions\ResetPasswordAction;
+use Modules\Auth\Actions\VerifyEmailAction;
 use Modules\Users\Actions\AddRoleAction;
 use Modules\Users\Actions\AssignPermissionToRoleAction;
 use Modules\Users\Actions\GetPermissionsAction;
@@ -13,6 +16,10 @@ use Modules\Users\Actions\GetRolesAction;
 use Modules\Users\Actions\GetUserAction;
 use Modules\Users\Actions\SyncRolesForUserAction;
 use Modules\Users\Enums\RolesEnum;
+
+
+
+
 
 
 
@@ -35,6 +42,8 @@ Route::prefix('v1/auth')->group(function () {
     Route::post('login', LoginAction::class);
     Route::post('forget-password', ForgetPasswordAction::class);
     Route::post('reset-password/{token}', ResetPasswordAction::class)->name('password.reset');
+    Route::post('/resend-verify-email', ResendVerifyEmailAction::class);
+    Route::post('/verify-email', VerifyEmailAction::class);
     Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('me', GetUserAction::class);
     });

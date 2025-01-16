@@ -18,28 +18,23 @@ class LoginAction
         $validated = $this->validate($data);
         if (Auth::attempt($validated)) {
             $user = Auth::guard('sanctum')->user();
-
+            if (!$user->hasVerifiedEmail()) {
+                return new ErrorResponseResource('Email not verified', 400);
+            }
             $accessToken = $user->createToken('authToken')->plainTextToken;
-            return ['access_token' => $accessToken, 'user' => UserResource::make($user)];
+            $data = ['access_token' => $accessToken, 'user' => UserResource::make($user)];
+            return new BaseResponseResource('Login successfully', $data, 200);
         }
-        throw ValidationException::withMessages([
-            'email' => 'The provided credentials are incorrect.'
-        ]);
     }
     public function validate($data)
     {
-        try {
-            return validator($data, [
-                'email' => 'required|email',
-                'password' => 'required'
-            ])->validate();
-        } catch (ValidationException $e) {
-            return $e->validator->validated();
-        }
+        return validator($data, [
+            'email' => 'required|email',
+            'password' => 'required'
+        ])->validate();
     }
     public function asController(Request $request)
     {
-        $data = $this->handle($request->all());
-        return new BaseResponseResource('User logged in successfully', $data, 200);
+        return $this->handle($request->all());
     }
 }

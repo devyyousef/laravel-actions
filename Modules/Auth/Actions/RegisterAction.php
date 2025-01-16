@@ -4,6 +4,7 @@ namespace Modules\Auth\Actions;
 
 use  Modules\Users\Models\User;
 use App\Http\Resources\BaseResponseResource;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
 use Lorisleiva\Actions\Concerns\AsAction;
