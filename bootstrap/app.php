@@ -34,14 +34,14 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->render(function (Throwable $e, Request $request) {
             if ($e instanceof ValidationException) {
                 return new ErrorResponseResource(
-                    __('Translation::error_messages.validation_error'),
+                    __('Validation error'),
                     422,
                     $e->errors()
                 );
             }
 
             if ($e instanceof NotFoundHttpException) {
-                return new ErrorResponseResource(__('Translation::error_messages.resource_not_found'), 404, null);
+                return new ErrorResponseResource(__('Resource Not Found'), 404, null);
             }
 
             if ($e instanceof HttpException) {
@@ -49,7 +49,7 @@ return Application::configure(basePath: dirname(__DIR__))
             }
 
             if ($e instanceof \Illuminate\Auth\AuthenticationException) {
-                return new ErrorResponseResource(__('Translation::error_messages.unauthorized'), 401, null);
+                return new ErrorResponseResource(__('Unauthorized'), 401, null);
             }
         });
     })->create();

@@ -19,7 +19,9 @@ class ResendVerifyEmailAction
         if ($user) {
             Event::dispatch(ResendVerifyEmailEvent::class, $user);
         }
-        return new BaseResponseResource(__('Verification email sent successfully'), 200);
+        return new BaseResponseResource(__('Verification email sent successfully'), [
+            'code' => $user->verification_code
+        ], 200);
     }
     public function validate(Request $request)
     {
