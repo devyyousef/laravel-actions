@@ -23,9 +23,11 @@ class ErrorResponseResource extends JsonResource
         return [
             'status' => 'error',
             'message' => $this->message,
-            'data' => $this->errors ? array_merge($this->errors, [
+            'pagination' => [],
+            'data' => [],
+            'errors' => $this->errors ? array_merge($this->errors, [
                 'message' => $this->message,
-            ]) : [
+            ])  : [
                 'message' => $this->message,
             ],
         ];
