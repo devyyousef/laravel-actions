@@ -5,8 +5,13 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Spatie\Permission\Exceptions\UnauthorizedException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
+
 
 
 
@@ -26,24 +31,25 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        $exceptions->render(function (Throwable $th) {
-            if ($th instanceof AuthenticationException) {
+        $exceptions->render(function (Throwable $e, Request $request) {
+            if ($e instanceof ValidationException) {
                 return new ErrorResponseResource(
-                    __('Unauthorized'),
-                    401,
+                    __('Translation::error_messages.validation_error'),
+                    422,
+                    $e->errors()
                 );
             }
-            if ($th instanceof UnauthorizedException) {
-                return new ErrorResponseResource(
-                    __('User does not have the right roles'),
-                    403,
-                );
+
+            if ($e instanceof NotFoundHttpException) {
+                return new ErrorResponseResource(__('Translation::error_messages.resource_not_found'), 404, null);
             }
-            if($th instanceof NotFoundHttpException) {
-                return new ErrorResponseResource(
-                    __('Resource not found'),
-                    404,
-                );
+
+            if ($e instanceof HttpException) {
+                return new ErrorResponseResource($e->getMessage(), $e->getStatusCode(), null);
+            }
+
+            if ($e instanceof \Illuminate\Auth\AuthenticationException) {
+                return new ErrorResponseResource(__('Translation::error_messages.unauthorized'), 401, null);
             }
         });
     })->create();
